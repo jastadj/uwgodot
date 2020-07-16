@@ -31,7 +31,8 @@ func loadLevel(var level):
 			var tile = level["map"][y][x]
 			if tile["shape"] != 0:
 				var newtile = floormesh.instance()
-				newtile.get_node("Cube").set_surface_material(0,Persistent.floor32_mats[tile["floor"]])
+				var floortilenum = level["textures"]["floors"][tile["floor"]]
+				newtile.get_node("Cube").set_surface_material(0,Persistent.floor32_mats[floortilenum])
 				newtile.translation = Vector3(x*2, float(tile["height"])/4*2, y*2)
 				
 				if false:
