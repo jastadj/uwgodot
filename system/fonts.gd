@@ -28,13 +28,13 @@ func loadFontFile(var filename):
 	# maximum width of a character in pixels
 	var max_width_pixels = f.get_8() | (f.get_8() << 8)
 	
-	print("Loading font from file:", filename)
-	print("character size (bytes):",char_size)
-	print("space char width (pixels):",space_pixels)
-	print("height (pixels):", height_pixels)
-	print("bytes in row:",row_bytes)
-	print("max width (pixels):", max_width_pixels)
-	print("total characters:", (f.get_len()-12) / (char_size+1) )
+	#print("Loading font from file:", filename)
+	#print("character size (bytes):",char_size)
+	#print("space char width (pixels):",space_pixels)
+	#print("height (pixels):", height_pixels)
+	#print("bytes in row:",row_bytes)
+	#print("max width (pixels):", max_width_pixels)
+	#print("total characters:", (f.get_len()-12) / (char_size+1) )
 	
 	for font_entry in range(0, (f.get_len()-12) / (char_size+1)):
 		var new_char = []
@@ -44,11 +44,21 @@ func loadFontFile(var filename):
 		var cur_width = f.get_8()
 		#print(font_entry," font char width:", cur_width)
 		#for y in range(0, row_data.size()):
+		#for y in range(0, height_pixels):
+		#	new_char.push_back([])
+		#	for x in range(0, cur_width):
+		#		new_char[y].push_back( (row_data[y] >> (7-x)) & 0x1)
+		
 		for y in range(0, height_pixels):
 			new_char.push_back([])
-			need to fix for two byte wide (or more) fonts
-			for x in range(0, cur_width):
-				new_char[y].push_back( (row_data[y] >> (7-x)) & 0x1)
+			for byte_in_row in range(0, row_bytes):
+				var byte_width
+				if byte_in_row < row_bytes-1: byte_width = 8
+				else: byte_width = cur_width - (byte_in_row*8)
+
+				for bit in range(0, byte_width):
+					new_char[y].push_back( (row_data[(y*row_bytes) + byte_in_row] >> (7-bit)) & 0x1)
+		
 		font_map.push_back(new_char)
 	
 	f.close()

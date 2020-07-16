@@ -5,6 +5,7 @@ func loadLevels(var filename):
 	# for each level, store level data, texture list for floors and walls, and if a savegame level file,
 	# read in save game data
 	var levels = {"level":[], "texture":[], "save":[]}
+	var levels_flattened = [] # this array is all the level data combined into a 1d array of levels
 	var chunk_offsets = []
 	
 	var f = File.new()
@@ -16,7 +17,7 @@ func loadLevels(var filename):
 	
 	# get chunk count
 	var chunk_count = f.get_8() | (f.get_8() << 8)
-	print("Chunk count:",chunk_count)
+	#print("Chunk count:",chunk_count)
 	
 	# get offsets
 	for c in range(0, chunk_count):
@@ -46,7 +47,7 @@ func loadLevels(var filename):
 					
 					level_data["map"][tile_y].push_back(tile)
 			# flip map tiles in the y
-			var unflipped = level_data["map"]
+			var unflipped = [] + level_data["map"]
 			for tile_y in range(0, 64):
 				level_data["map"][63 - tile_y] = unflipped[tile_y]
 			
@@ -73,7 +74,12 @@ func loadLevels(var filename):
 			print("Level chunk with size ",chunk_size," is unknown.")
 			continue
 		
-			
+	# flatten level data
+	for i in range(0, levels["level"].size()):
+		var level = levels["level"][i]
+		level["textures"] = levels["texture"][i]
+		levels_flattened.push_back(level)
+		
 	
 	f.close()
-	return levels
+	return levels_flattened

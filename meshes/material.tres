@@ -1,0 +1,6 @@
+[gd_resource type="SpatialMaterial" load_steps=2 format=2]
+
+[sub_resource type="ImageTexture" id=1]
+
+[resource]
+albedo_texture = SubResource( 1 )
