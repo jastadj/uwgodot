@@ -74,3 +74,11 @@ func new_image_from_map(var image_map, var pal ):
 	newimage.unlock()
 	
 	return newimage
+
+func new_material_from_image(var image):
+	var newmat = SpatialMaterial.new()
+	var newimgtxt = ImageTexture.new()
+	newimgtxt.create_from_image(image)
+	newimgtxt.flags = newimgtxt.FLAG_REPEAT
+	newmat.albedo_texture = newimgtxt
+	return newmat

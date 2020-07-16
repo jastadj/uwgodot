@@ -22,4 +22,3 @@ mesh = SubResource( 1 )
 material/0 = SubResource( 2 )
 
 [node name="tiles" type="Spatial" parent="."]
-transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 )

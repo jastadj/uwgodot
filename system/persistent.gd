@@ -24,6 +24,9 @@ var floor32_map = []
 var floor16 = []
 var floor32 = []
 
+# materials
+var floor32_mats = []
+
 # levels
 var levels = []
 
@@ -74,6 +77,10 @@ func load_graphics():
 	for i in range(0, floor32_map.size()):
 		floor32.push_back( img_loader.new_image_from_map(floor32_map[i],palettes[0]))
 	print(floor32.size(), "floor32 images created.")
+	
+	# create floor32 materials
+	for i in range(0, floor32.size()):
+		floor32_mats.push_back(img_loader.new_material_from_image(floor32[i]))
 
 func load_fonts():
 	
