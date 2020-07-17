@@ -16,13 +16,11 @@ var font5x6i = []
 var font5x6p = []
 var fontbig = []
 
-# image maps
-var floor16_map = []
-var floor32_map = []
-
 # images
-var floor16 = []
-var floor32 = []
+var img_floor16 = []
+var img_floor32 = []
+var img_3dwin = []
+var img_views = []
 
 # materials
 var floor32_mats = []
@@ -65,22 +63,24 @@ func load_graphics():
 	var img_loader = load("res://system/images.gd").new()
 	
 	# load floor16
-	floor16_map = img_loader.loadImageFile("res://uw_data/UWDATA/F16.TR")
-	print(floor16_map.size()," floor16 image maps loaded.")
-	for i in range(0, floor16_map.size()):
-		floor16.push_back( img_loader.new_image_from_map(floor16_map[i],palettes[0]))
-	print(floor16.size(), "floor16 images created.")
+	img_floor16 = img_loader.loadImageFile("res://uw_data/UWDATA/F16.TR")
+	print(img_floor16.size()," floor16 image maps loaded.")
 	
 	# load floor32
-	floor32_map = img_loader.loadImageFile("res://uw_data/UWDATA/F32.TR")
-	print(floor32_map.size()," floor32 image maps loaded.")
-	for i in range(0, floor32_map.size()):
-		floor32.push_back( img_loader.new_image_from_map(floor32_map[i],palettes[0]))
-	print(floor32.size(), "floor32 images created.")
+	img_floor32 = img_loader.loadImageFile("res://uw_data/UWDATA/F32.TR")
+	print(img_floor32.size()," floor32 image maps loaded.")
 	
 	# create floor32 materials
-	for i in range(0, floor32.size()):
-		floor32_mats.push_back(img_loader.new_material_from_image(floor32[i]))
+	for i in range(0, img_floor32.size()):
+		floor32_mats.push_back(img_loader.new_material_from_image(img_floor32[i]))
+
+	# load 3dwin 
+	img_3dwin = img_loader.loadImageFile("res://uw_data/UWDATA/3DWIN.GR")
+	print(img_3dwin.size()," 3dwin (window_map) image maps loaded.")
+
+	
+	# load view.gr
+
 
 func load_fonts():
 	
