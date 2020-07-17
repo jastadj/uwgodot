@@ -39,6 +39,10 @@ func loadImageFile(var filename):
 			var image_height = f.get_8()
 			var rle_bits = null
 			
+			if image_width == 0 or image_height == 0:
+				print("Error, img size ",Vector2(image_width,image_height)," invalid in ",filename," @ 0x", offsets[bitmap])
+				continue
+			
 			newimg.create(image_width, image_height, false, Image.FORMAT_RGBA8)
 			newimg.lock()
 			
@@ -59,12 +63,14 @@ func loadImageFile(var filename):
 			# format 8 = 4-bit RLE
 			elif bitmap_format == 8:
 				rle_bits = 4
+			else:
+				print("ERROR, unknown bitmap format ",bitmap_format," in ", filename )			
+				continue
 			
 			if rle_bits != null:
 				pass
 			
-			else:
-				print("Error, unknown bitmap format ",bitmap_format," in ", filename )
+
 			
 			newimg.unlock()
 			images.push_back(newimg)
@@ -79,6 +85,8 @@ func loadImageFile(var filename):
 
 			newimg.unlock()
 			images.push_back(newimg)
+		else:
+			print("ERROR, unknown file format ", file_format, " in ",filename)
 	
 	return images
 

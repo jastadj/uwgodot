@@ -19,8 +19,13 @@ var fontbig = []
 # images
 var img_floor16 = []
 var img_floor32 = []
+var img_wall16 = []
+var img_wall64 = []
 var img_3dwin = []
+var img_dragons = []
 var img_views = []
+var img_chains = []
+var img_objects = []
 
 # materials
 var floor32_mats = []
@@ -64,11 +69,19 @@ func load_graphics():
 	
 	# load floor16
 	img_floor16 = img_loader.loadImageFile("res://uw_data/UWDATA/F16.TR")
-	print(img_floor16.size()," floor16 image maps loaded.")
+	print(img_floor16.size()," floor16 images loaded.")
 	
 	# load floor32
 	img_floor32 = img_loader.loadImageFile("res://uw_data/UWDATA/F32.TR")
-	print(img_floor32.size()," floor32 image maps loaded.")
+	print(img_floor32.size()," floor32 images loaded.")
+	
+	# load wall16
+	img_wall16 = img_loader.loadImageFile("res://uw_data/UWDATA/W16.TR")
+	print(img_wall16.size()," wall16 images loaded.")
+	
+	# load wall32
+	img_wall64 = img_loader.loadImageFile("res://uw_data/UWDATA/W64.TR")
+	print(img_wall64.size()," wall64 images loaded.")
 	
 	# create floor32 materials
 	for i in range(0, img_floor32.size()):
@@ -76,11 +89,19 @@ func load_graphics():
 
 	# load 3dwin 
 	img_3dwin = img_loader.loadImageFile("res://uw_data/UWDATA/3DWIN.GR")
-	print(img_3dwin.size()," 3dwin (window_map) image maps loaded.")
+	print(img_3dwin.size()," 3dwin images loaded.")
 
+	# load dragons
+	img_dragons = img_loader.loadImageFile("res://uw_data/UWDATA/DRAGONS.GR")
+	print(img_dragons.size()," dragons images loaded.")
+
+	# load chains
+	img_chains = img_loader.loadImageFile("res://uw_data/UWDATA/CHAINS.GR")
+	print(img_chains.size()," chains images loaded.")
 	
-	# load view.gr
-
+	# load objects
+	img_objects = img_loader.loadImageFile("res://uw_data/UWDATA/OBJECTS.GR")
+	print(img_objects.size()," object images loaded.")	
 
 func load_fonts():
 	
