@@ -63,14 +63,105 @@ func loadImageFile(var filename):
 			# format 8 = 4-bit RLE
 			elif bitmap_format == 8:
 				rle_bits = 4
+			
+			# format 10 = 
+			elif bitmap_format == 0xa:
+				pass
 			else:
 				print("ERROR, unknown bitmap format ",bitmap_format," in ", filename )			
 				continue
 			
 			if rle_bits != null:
-				pass
+				
+				# get aux pal to use
+				var aux_pal = f.get_8()
+				# get nibble count
+				var nib_count = f.get_8() | (f.get_8() << 8)
+				# get file position where bitmap data actually starts
+				var bitmap_offset = f.get_position()
+				
+				var nibs = []
+				var pixels = 0
+				# get all nibbles in data
+				for n in range(0, (nib_count/2)):
+					var byte = f.get_8()
+					var n1 = (byte >> 4) & 0xf
+					nibs.push_back(n1)
+					var n2 = byte & 0xf
+					nibs.push_back(n2)
+					if n == (nib_count/2)-1:
+						if ((n*2)+1) < (nib_count-1):
+							var next_byte = f.get_8()
+							nibs.push_back( (next_byte >> 4) & 0xf)
+				if bitmap == 6:
+					pass
+				# repeat and run records, starting with repeat record
+				var repeat = 1
+				
+				var cur_nib = 0
+				while(cur_nib < nib_count):
+					
+					# get record count
+					# get nib, if non-zero it is count, else, get two more nibs and check, and finally get 3 more nibs
+					var count = nibs[cur_nib]
+					cur_nib += 1
+					if count == 0:
+						count = nibs[cur_nib] << 4 | nibs[cur_nib+1]
+						cur_nib += 2
+						if count == 0:
+							count = (nibs[cur_nib+1] << 4 | nibs[cur_nib+2]) << 4 | nibs[cur_nib+3]
+							cur_nib += 3
+					else:
+						if count == 1:
+							repeat = 0
+							continue
+						elif count == 2:
+							var repeats = nibs[cur_nib]
+							cur_nib += 1
+							
+							var count2 = nibs[cur_nib]
+							cur_nib += 1
+							
+							for r in range(0, count2):
+								if count2 == 0:
+									count2 = nibs[cur_nib] << 4 | nibs[cur_nib+1]
+									cur_nib += 2
+									if count2 == 0:
+										count2 = (nibs[cur_nib+1] << 4 | nibs[cur_nib+2]) << 4 | nibs[cur_nib+3]
+										cur_nib += 3
+										
+							for r in range(0, repeats):
+								var repeat_nib = nibs[cur_nib]
+								cur_nib += 1
+								for rn in range(0, count2):
+									var py = (rn+pixels) / image_width
+									var px = (rn+pixels) - (py*image_width)
+									newimg.set_pixel(px, py, Persistent.palettes[0][Persistent.auxpals[aux_pal][nibs[cur_nib]] ] )
+									pixels += 1
+								repeat = 0
+					
+					if repeat == 1:
+						var repeat_nib = nibs[cur_nib]
+						cur_nib += 1
+						for rn in range(0, count):
+							var py = (rn+pixels) / image_width
+							var px = (rn+pixels) - (py*image_width)
+							newimg.set_pixel(px, py, Persistent.palettes[0][Persistent.auxpals[aux_pal][nibs[cur_nib]] ] )
+							pixels += 1
+						repeat = 0
+							
+					else:
+						for rn in range(0, count):
+							var py = (rn+pixels) / image_width
+							var px = (rn+pixels) - (py*image_width)
+							newimg.set_pixel(px, py, Persistent.palettes[0][ Persistent.auxpals[aux_pal][nibs[cur_nib]] ] )
+							cur_nib += 1
+							if cur_nib >= nib_count: break
+							pixels += 1
+						repeat = 0
+						
+					
 			
-
 			
 			newimg.unlock()
 			images.push_back(newimg)
