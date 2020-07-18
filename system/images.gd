@@ -110,6 +110,51 @@ func loadImageFile(var filename, var tpal = 0):
 	
 	return images
 
+func loadImagePanelFile(var filename):
+
+	var palette = Persistent.palettes[0]
+	var images = []
+	var offsets = []
+	
+	var f = File.new()
+	f.open(filename, File.READ)
+	
+	if !f.is_open():
+		print("Error loading image file:", filename)
+		return null
+	
+	# determine file format and image count
+	var file_format = f.get_8()
+	var bitmap_count = f.get_8() | (f.get_8() << 8)
+	
+	# get all the image file offsets
+	for bitmap_num in range(0, bitmap_count):
+		var offs = f.get_8() | (f.get_8() << 8) | (f.get_8() << 16 ) | (f.get_8() << 24)
+		offsets.push_back(offs)
+	
+	for bitmap in range(0, bitmap_count):
+		
+		var newimg = Image.new()
+		var img_size
+		
+		if bitmap >= 0 and bitmap <= 2:
+			img_size = Vector2(83,114)
+		elif bitmap == 3: img_size = Vector2(6,60)
+		
+		# goto offset
+		f.seek(offsets[bitmap])
+		
+
+		newimg.create(img_size.x, img_size.y, false, Image.FORMAT_RGBA8)
+		newimg.lock()
+		for y in range(0, img_size.y):
+			for x in range(0, img_size.x):
+				newimg.set_pixel(x, y, palette[f.get_8()])
+
+		newimg.unlock()
+		images.push_back(newimg)
+	
+	return images
 
 static func new_image_texture_from_image(var image):
 	var newimgtxt = ImageTexture.new()
@@ -124,3 +169,24 @@ func new_material_from_image(var image):
 	newimgtxt.flags = newimgtxt.FLAG_REPEAT
 	newmat.albedo_texture = newimgtxt
 	return newmat
+
+func loadBitmapFile(var filename, var width, var height, var tpal = 0):
+	var palette = Persistent.palettes[tpal]
+	var newimg
+	
+	var file = File.new()
+	file.open(filename, File.READ)
+	if !file.is_open():
+		print("Error opening bitmap file:", filename)
+		return null
+	
+	newimg = Image.new()
+	newimg.create(width, height, false, Image.FORMAT_RGBA8)
+	
+	newimg.lock()
+	for y in range(0, height):
+		for x in range(0, width):
+			newimg.set_pixel(x, y, palette[file.get_8()])
+	
+	newimg.unlock()
+	return newimg

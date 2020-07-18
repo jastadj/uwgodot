@@ -27,6 +27,11 @@ var img_dragons = []
 var img_views = []
 var img_chains = []
 var img_objects = []
+var img_panels = []
+var img_flasks = []
+
+# bitmap images
+var bmp_main = null
 
 # materials
 var floor32_mats = []
@@ -68,7 +73,7 @@ func load_graphics():
 	
 	var img_loader = load("res://system/images.gd").new()
 	
-	var testfile = "CONVERSE.GR"
+	var testfile = "FLASKS.GR"
 	img_test = img_loader.loadImageFile(str("res://uw_data/UWDATA/",testfile))
 	print(img_test.size(), " test images loaded.  !!!This should be debug only!!!")
 	
@@ -107,6 +112,19 @@ func load_graphics():
 	# load objects
 	img_objects = img_loader.loadImageFile("res://uw_data/UWDATA/OBJECTS.GR")
 	print(img_objects.size()," object images loaded.")	
+	
+	# load panels
+	img_panels = img_loader.loadImagePanelFile("res://uw_data/UWDATA/PANELS.GR")
+	print(img_panels.size(), " image panels loaded.")
+	
+	# load flasks
+	img_flasks = img_loader.loadImageFile("res://uw_data/UWDATA/FLASKS.GR")
+	print(img_flasks.size()," flask images loaded.")	
+
+	# load main bitmap
+	bmp_main = img_loader.loadBitmapFile("res://uw_data/UWDATA/MAIN.BYT", 320, 200, 0)
+	print("main bitmap loaded")
+	
 
 func load_fonts():
 	
