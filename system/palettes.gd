@@ -27,9 +27,8 @@ func load256PaletteFile(var filename):
 			#var g = f.get_8()
 			#var b = f.get_8()
 			
-			#if color_count == 0: pal256.push_back(Color(0,0,0,1))
-			#else: pal256.push_back( Color( float(f.get_8())/64, float(f.get_8())/64, float(f.get_8())/64) )
-			pal256.push_back( Color( float(f.get_8())/64, float(f.get_8())/64, float(f.get_8())/64) )
+			if color_count == 0: pal256.push_back(Color.transparent)
+			else: pal256.push_back( Color( float(f.get_8())/64, float(f.get_8())/64, float(f.get_8())/64) )
 			
 			
 			color_count += 1

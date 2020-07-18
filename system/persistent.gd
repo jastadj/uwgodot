@@ -17,6 +17,7 @@ var font5x6p = []
 var fontbig = []
 
 # images
+var img_test = []
 var img_floor16 = []
 var img_floor32 = []
 var img_wall16 = []
@@ -66,6 +67,10 @@ func load_palettes():
 func load_graphics():
 	
 	var img_loader = load("res://system/images.gd").new()
+	
+	var testfile = "CONVERSE.GR"
+	img_test = img_loader.loadImageFile(str("res://uw_data/UWDATA/",testfile))
+	print(img_test.size(), " test images loaded.  !!!This should be debug only!!!")
 	
 	# load floor16
 	img_floor16 = img_loader.loadImageFile("res://uw_data/UWDATA/F16.TR")

@@ -8,7 +8,8 @@ var images = load("res://system/images.gd")
 func _ready():
 	
 	### SET THE IMAGE TO TEST HERE ###
-	image_list = Persistent.img_dragons
+	#image_list = Persistent.img_dragons
+	image_list = Persistent.img_test
 	
 	refresh_image()
 
@@ -40,3 +41,4 @@ func _process(delta):
 func refresh_image():
 	print("refreshing image")
 	$image.texture = images.new_image_texture_from_image( image_list[image_index] )
+	print("test image index = ", image_index)
