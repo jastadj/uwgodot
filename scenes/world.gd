@@ -31,6 +31,8 @@ func loadLevel(var level):
 	var floorw_mesh = preload("res://meshes/floor_slope_west.tscn")
 	var ceilingmesh = preload("res://meshes/ceiling.tscn")
 	var wallmesh = preload("res://meshes/wall.tscn")
+	var wallslopemesha = preload("res://meshes/wall_slope_a.tscn")
+	var wallslopemeshb = preload("res://meshes/wall_slope_b.tscn")
 	var mymaterial = load("res://meshes/material.tres")
 	
 	var floors = level["textures"]["floors"]
@@ -44,10 +46,6 @@ func loadLevel(var level):
 				
 				# create floor tile
 				var newtile
-				var wallsouth = false
-				var wallnorth = false
-				var walleast = false
-				var wallwest = false
 				
 				if tile["shape"] == 6: newtile = floorn_mesh.instance()
 				elif tile["shape"] == 7: newtile = floors_mesh.instance()
@@ -57,71 +55,47 @@ func loadLevel(var level):
 				
 				var floortilenum = floors[tile["floor"]]
 				newtile.get_node("Cube").set_surface_material(0,Persistent.floor32_mats[floortilenum])
-				newtile.translation = Vector3(x*2, float(tile["height"])/4*2, y*2)
+				newtile.translation = Vector3(x*2, (float(tile["height"])/4)*2, y*2)
 				$tiles.add_child(newtile)
 				
 				# create ceiling tile
 				var newceiltile = ceilingmesh.instance()
 				newceiltile.get_node("Cube").set_surface_material(0, Persistent.ceiling_mat)
-				newceiltile.translation = Vector3(x*2, 16/4*2, y*2)
+				newceiltile.translation = Vector3(x*2, (float(16)/4)*2, y*2)
 				$tiles.add_child(newceiltile)
 				
-				var walltilenum = walls[tile["wall"]]
-				
-				# check tile to the south
-				var wallsouth_h = ((16/4)-1)*2
-				var wallsouth_l = 4
-				if y < 64-2:
-					wallsouth_l = level["map"][y+1][x]["height"] - level["map"][y][x]["height"]
-					if level["map"][y+1][x]["shape"] == 0:
-						wallsouth = true
-						wallsouth_l = 16 - level["map"][y][x]["height"]
-					elif wallsouth_l > 0:
-						if wallsouth_l == 1 and level["map"][y][x]["shape"] == 7:
-							pass
-						else:
-							wallsouth_h = ((level["map"][y][x]["height"] + wallsouth_l - 1)/4)*2
-							wallsouth = true
-				else:
-					wallsouth = true
-					wallsouth_l = 15 - level["map"][y][x]["height"]
-				if wallsouth:
-					for w in range(0, (wallsouth_l/4)+1):
-						var wallstile
-						wallstile = wallmesh.instance()
-						wallstile.get_node("Cube").set_surface_material(0,Persistent.wall64_mats[walltilenum])
-						wallstile.translation = Vector3(x*2, wallsouth_h-(w*2), y*2)
-						wallstile.rotation_degrees.y = 180
-						#newtile.add_child(wallstile)
-						$tiles.add_child(wallstile)
+				#var walltilenum = walls[tile["wall"]]
+				# get wall height to the south
+				var walls_h = 16
+				var walls_l = 4
+				var tile_south = null
+				if y != 63:
+					tile_south = level["map"][y+1][x]
+					walls_h = tile_south["height"]
+					walls_l = walls_h - tile["height"]
+					if walls_l == 1 and tile["shape"] == 7: walls_l = 0
+				if walls_l > 0:
+					if walls_l < 4: walls_l = 4
+					for w in range(0, ceil(float(walls_l)/4) ):
+						var walls_mesh = wallmesh.instance()
+						var wally = ( ( float(walls_h - (w*4)) / 4) - 1 )*2
+						walls_mesh.get_node("Cube").set_surface_material(0,Persistent.wall64_mats[ walls[tile["wall"]] ])
+						walls_mesh.rotation_degrees.y = 180
+						walls_mesh.translation = Vector3(x*2, wally , y*2)
+						$tiles.add_child(walls_mesh)
 						
-				# check tile to the north
-				var wallnorth_h = ((16/4)-1)*2
-				var wallnorth_l = 4
-				if y > 0:
-					wallnorth_l = level["map"][y-1][x]["height"] - level["map"][y][x]["height"]
-					if level["map"][y-1][x]["shape"] == 0:
-						wallnorth = true
-						wallnorth_l = 16 - level["map"][y][x]["height"]
-					elif wallnorth_l > 0:
-						if wallnorth_l == 1 and level["map"][y][x]["shape"] == 7:
-							pass
-						else:
-							wallnorth_h = ((level["map"][y][x]["height"] + wallnorth_l - 1)/4)*2
-							wallnorth = true
-				else:
-					wallnorth = true
-					wallnorth_l = 15 - level["map"][y][x]["height"]
-				if wallnorth:
-					for w in range(0, (wallnorth_l/4)+1):
-						var wallntile
-						wallntile = wallmesh.instance()
-						wallntile.get_node("Cube").set_surface_material(0,Persistent.wall64_mats[walltilenum])
-						wallntile.translation = Vector3(x*2, wallnorth_h-(w*2), y*2)
-						#wallntile.rotation_degrees.y = 180
-						#newtile.add_child(wallstile)
-						$tiles.add_child(wallntile)
-	
+						if tile_south:
+							if tile_south["shape"] == 8 || tile_south["shape"] == 9:
+								var slopemesh
+								if tile_south["shape"] == 9: slopemesh = wallslopemesha.instance()
+								else: slopemesh = wallslopemeshb.instance()
+								slopemesh.get_node("Cube").set_surface_material(0,Persistent.wall64_mats[ walls[tile["wall"]] ])
+								slopemesh.rotation_degrees.y = 180
+								slopemesh.translation = Vector3(x*2, wally+(1*2), y*2)
+								$tiles.add_child(slopemesh)
+					
+				
+	print("breakpoint")
 	# set player position
 	#setObjectToTile($player, Vector2(31,61) )
 	

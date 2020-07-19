@@ -44,7 +44,7 @@ func loadLevels(var filename):
 				for tile_x in range(0,64):
 					var tile_data = f.get_8() | f.get_8() << 8 | f.get_8() << 16 | f.get_8() << 24
 					var tile = {"shape": tile_data & 0xf, "height": (tile_data>>4) & 0xf, "floor": (tile_data>>10) & 0xf, "wall": (tile_data >> 16) & 0x3f, "first_obj": (tile_data>>22) & 0x3ff}
-					
+					if tile["shape"] == 0: tile["height"] = 16
 					level_data["map"][tile_y].push_back(tile)
 			# flip map tiles in the y
 			var unflipped = [] + level_data["map"]
