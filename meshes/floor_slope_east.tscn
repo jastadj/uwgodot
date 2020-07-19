@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://meshes/slope_collision.tscn" type="PackedScene" id=1]
+[ext_resource path="res://raws/floor_slope_east.dae" type="PackedScene" id=2]
+
+[node name="floor_slope_east" instance=ExtResource( 2 )]
+
+[node name="StaticBody" parent="." index="0" instance=ExtResource( 1 )]
+transform = Transform( -1.62921e-07, 0, 1, 0, 1, 0, -1, 0, -1.62921e-07, 0, 0, 0 )

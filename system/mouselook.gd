@@ -2,7 +2,7 @@ extends Camera
 
 export(bool) var mouse_look = true
 export(bool) var fly_mode = true
-
+export(bool) var allow_move_input = false
 
 var sensitivity_x = 25
 var sensitivity_y = 25
@@ -24,14 +24,15 @@ func _ready():
 
 func _process(delta):
 	
-	if Input.is_action_pressed("ui_up"):
-		_movement_input.y = -1
-	elif Input.is_action_pressed("ui_down"):
-		_movement_input.y = 1
-	if Input.is_action_pressed("ui_left"):
-		_movement_input.x = -1
-	elif Input.is_action_pressed("ui_right"):
-		_movement_input.x = 1
+	if allow_move_input:
+		if Input.is_action_pressed("ui_up"):
+			_movement_input.y = -1
+		elif Input.is_action_pressed("ui_down"):
+			_movement_input.y = 1
+		if Input.is_action_pressed("ui_left"):
+			_movement_input.x = -1
+		elif Input.is_action_pressed("ui_right"):
+			_movement_input.x = 1
 	
 	if _mouse_delta != Vector2(0,0) and mouse_look:
 		var invert_mod = -1
@@ -42,7 +43,7 @@ func _process(delta):
 		
 		rotation_degrees.y += -_mouse_delta.x * delta * sensitivity_y
 	
-	if _movement_input != Vector2(0,0):
+	if _movement_input != Vector2(0,0) and allow_move_input:
 		
 		if fly_mode:
 			#var projection = project_ray_normal(get_viewport().get_mouse_position())

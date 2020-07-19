@@ -20,6 +20,7 @@ var fontbig = []
 var img_test = []
 var img_floor16 = []
 var img_floor32 = []
+var img_ceiling = null
 var img_wall16 = []
 var img_wall64 = []
 var img_3dwin = []
@@ -35,6 +36,8 @@ var bmp_main = null
 
 # materials
 var floor32_mats = []
+var wall64_mats = []
+var ceiling_mat = null
 
 # levels
 var levels = []
@@ -85,6 +88,9 @@ func load_graphics():
 	img_floor32 = img_loader.loadImageFile("res://uw_data/UWDATA/F32.TR")
 	print(img_floor32.size()," floor32 images loaded.")
 	
+	# set ceiling texture (floor32 index # 15)
+	img_ceiling = img_floor32[15].duplicate()
+	
 	# load wall16
 	img_wall16 = img_loader.loadImageFile("res://uw_data/UWDATA/W16.TR")
 	print(img_wall16.size()," wall16 images loaded.")
@@ -96,6 +102,13 @@ func load_graphics():
 	# create floor32 materials
 	for i in range(0, img_floor32.size()):
 		floor32_mats.push_back(img_loader.new_material_from_image(img_floor32[i]))
+	
+	# create wall64 materials
+	for i in range(0, img_wall64.size()):
+		wall64_mats.push_back(img_loader.new_material_from_image(img_wall64[i]))
+	
+	# create ceiling material
+	ceiling_mat = img_loader.new_material_from_image(img_ceiling)
 
 	# load 3dwin 
 	img_3dwin = img_loader.loadImageFile("res://uw_data/UWDATA/3DWIN.GR")
